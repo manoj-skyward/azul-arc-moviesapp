@@ -24,7 +24,7 @@ function AppNavigator() {
           name="MoviesDashboard"
           component={MoviesDahsboard}
           options={{
-            title: 'Movies Dashboard', //Set Header Title
+            title: 'Search Movies', //Set Header Title
             headerStyle: {
               backgroundColor: '#000', //Set Header color
             },

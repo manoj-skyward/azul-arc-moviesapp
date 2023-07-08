@@ -1,47 +1,34 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
+import {View, Text, ScrollView, Image, ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import api, {API_KEY, IMAGE_BASE_URL} from '../api/api';
-import moment from 'moment/moment';
+import {API_KEY_STRING, BASE_URL} from '../api/api';
 import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
 
 const MovieDetails = ({route}) => {
   const navigation = useNavigation();
 
-  console.log('\n\n Props are\n\n', route);
+  console.log('\n\n Props are\n\n', route?.params?.item?.imdbID);
   const [movie, setMovie] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const getMovie = async () => {
+    const id = route?.params?.item?.imdbID || 'tt0413300';
+    const getMovieDetails = async () => {
+      setLoading(true);
       try {
-        const response = await api.get(`movie/${route?.params?.movieID}`, {
-          params: {api_key: API_KEY},
-        });
-
-        console.log('\n\n Successful\n\n');
-        console.log('\n\n API Data\n\n', response.data);
-
-        setMovie(response.data);
-      } catch (err) {
-        console.log('\n\nError in Retriving Popular Movies\n\n:', err);
+        let res = await axios.get(
+          BASE_URL + API_KEY_STRING + `&i=${id}` + '&type=movie' + '&page=1',
+        );
+        console.log('\nMovie is\n\n', res.data);
+        setMovie(res.data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
       }
     };
 
-    getMovie();
+    getMovieDetails();
   }, []);
-
-  const IMG_PATH = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-  console.log('\n\n Image Path is\n\n', IMG_PATH);
-
-  const realeaseDate = new Date(movie.release_date);
-  const formattedDate = moment(realeaseDate).format('Do MMMM  YYYY');
-  console.log('\n\n Image Path is\n\n', formattedDate);
 
   return (
     <View
@@ -57,57 +44,96 @@ const MovieDetails = ({route}) => {
         style={{
           flex: 1,
           backgroundColor: '#b8e5f5',
-          //   justifyContent: 'center',
         }}>
-        <View
-          style={{
-            flex: 1,
-            // backgroundColor: 'pink',
-            width: '95%',
-            // height: '98%',
-            // backgroundColor: 'blue',
-            //   margin: 10,
-            // alignItems: 'center',
-            // justifyContent: 'center',
-          }}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#000" />
+        ) : (
           <View
             style={{
-              width: '100%',
-              height: '75%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 5,
+              flex: 1,
+              width: '95%',
+              marginTop: 30,
+              // height: '98%',
+              // backgroundColor: 'blue',
+              //   margin: 10,
+              // alignItems: 'center',
+              // justifyContent: 'center',
+              // marginLeft:10
             }}>
-            <Image
-              source={{uri: IMG_PATH}}
+            <View
               style={{
-                // alignSelf: 'flex-end',
-                // width: ,
                 width: '100%',
-                height: '100%',
-                resizeMode: 'stretch',
-                borderRadius: 20,
-              }}
-            />
+                height: '50%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 5,
+              }}>
+              <Image
+                source={{
+                  uri: movie.Poster,
+                }}
+                style={{
+                  // alignSelf: 'flex-end',
+                  // width: ,
+                  width: '85%',
+                  height: '98%',
+                  resizeMode: 'stretch',
+                  borderRadius: 5,
+                }}
+              />
+            </View>
+            <View style={{height: '30%', marginTop: 10, marginLeft: 25}}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  marginVertical: 5,
+                }}>
+                {movie.Title}
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '90%',
+                  marginVertical: 5,
+                }}>
+                <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+                  Year of Release:
+                </Text>
+                <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+                  {movie.Year}
+                </Text>
+              </View>
+              <Text
+                style={{fontSize: 20, fontWeight: 'bold', marginVertical: 5}}>
+                Plot:{' '}
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 'normal',
+                    textAlign: 'justify',
+                    marginVertical: 5,
+                  }}>
+                  {movie?.Plot}
+                </Text>
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '90%',
+                  marginVertical: 5,
+                }}>
+                <Text style={{fontSize: 20, fontWeight: 'bold'}}>Rating</Text>
+                <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+                  {movie.imdbRating}★
+                </Text>
+              </View>
+            </View>
           </View>
-          <View style={{height: '20%', marginTop: 10, marginLeft: 5}}>
-            <Text
-              style={{fontSize: 20, fontWeight: 'bold', textAlign: 'justify'}}>
-              {movie.title}
-            </Text>
-            <Text style={{fontSize: 20}}>Release Date: {formattedDate}</Text>
-            <Text style={{fontSize: 20}}>
-              Runtime: {movie?.runtime} Minutes
-            </Text>
-            {/* <Text style={{fontSize: 20}}>Overview: {movie?.overview}</Text> */}
-            <Text style={{fontSize: 20}}>
-              Genres:{' '}
-              {movie?.genres?.map(t => {
-                return <Text id={t.id}>{t.name},</Text>;
-              })}
-            </Text>
-          </View>
-        </View>
+        )}
       </ScrollView>
     </View>
     // </View>

@@ -1,9 +1,8 @@
 import axios from 'axios';
 
-export const API_KEY = 'cec566a1';
+export const API_KEY_STRING = 'apikey=cec566a1';
 
-const BASE_URL = 'https://api.themoviedb.org/3/';
-export const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500/';
-const api = axios.create({baseURL: BASE_URL});
+export const BASE_URL = 'https://www.omdbapi.com/?';
+// const api = axios.create({baseURL: BASE_URL});
 
-export default api;
+// export default api;

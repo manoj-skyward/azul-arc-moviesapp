@@ -15,16 +15,31 @@ const Splash = ({navigation}) => {
         alignItems: 'center',
         backgroundColor: '#000',
       }}>
-      <Text style={{fontSize: 20, fontWeight: 'bold', color: '#05c1f5'}}>
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: 'bold',
+          color: '#05c1f5',
+          marginBottom: 30,
+        }}>
         All Movies In One Place
       </Text>
+      <Text
+        style={{
+          fontSize: 60,
+          fontWeight: 'bold',
+          color: '#2da7cc',
+          marginBottom: 30,
+        }}>
+        OMDB{' '}
+      </Text>
       <Image
-        source={require('../res/images/splash_logo.jpg')}
+        source={require('../res/images/poster.jpg')}
         style={{
           width: 250,
           height: 350,
           resizeMode: 'contain',
-          borderRadius: 20,
+          borderRadius: 5,
         }}
       />
     </View>
