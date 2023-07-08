@@ -24,11 +24,11 @@ function AppNavigator() {
           name="MoviesDashboard"
           component={MoviesDahsboard}
           options={{
-            title: 'Search Movies', //Set Header Title
+            title: 'Search Movies',
             headerStyle: {
-              backgroundColor: '#000', //Set Header color
+              backgroundColor: '#000',
             },
-            headerTintColor: '#07f2f2', //Set Header text color
+            headerTintColor: '#07f2f2',
             headerTitleStyle: {
               fontWeight: 'bold',
             },
@@ -39,18 +39,15 @@ function AppNavigator() {
           name="MovieDetails"
           component={MovieDetails}
           options={{
-            title: 'Movie Details', //Set Header Title
+            title: 'Movie Details',
             headerStyle: {
-              backgroundColor: '#000', //Set Header color
+              backgroundColor: '#000',
             },
-            headerTintColor: '#07f2f2', //Set Header text color
+            headerTintColor: '#07f2f2',
             headerTitleStyle: {
-              fontWeight: 'bold', //Set Header text style
+              fontWeight: 'bold',
             },
             headerLeft: () => <HeaderImage />,
-
-            // headerRight: () => <UserImage dashboard={true} />,
-            // headerRight: () => <UserImage dashboard={true} />,
           }}
         />
       </Stack.Navigator>
